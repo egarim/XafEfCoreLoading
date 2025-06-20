@@ -12,6 +12,7 @@ namespace XafEfCoreLoading.Module.BusinessObjects
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
-        public List<Blog> Blogs { get; set; } = new();
+        // VIRTUAL is required for lazy loading proxies
+        public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
     }
 }

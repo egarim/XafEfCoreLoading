@@ -15,6 +15,7 @@ namespace XafEfCoreLoading.Module.BusinessObjects
         public DateTime CreatedDate { get; set; }
         public int PostId { get; set; }
 
-        public Post Post { get; set; } = null!;
+        // VIRTUAL is required for lazy loading proxies
+        public virtual Post Post { get; set; } = null!;
     }
 }

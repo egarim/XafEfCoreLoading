@@ -18,7 +18,6 @@ namespace XafEfCoreLoading.Module.BusinessObjects
     // Register this entity in your DbContext (usually in the BusinessObjects folder of your project) with the "public DbSet<EntityObject1> EntityObject1s { get; set; }" syntax.
     [DefaultClassOptions]
     // Entity Classes
-    // Entity Classes
     public class Blog
     {
         public int Id { get; set; }
@@ -26,7 +25,8 @@ namespace XafEfCoreLoading.Module.BusinessObjects
         public string Description { get; set; } = string.Empty;
         public DateTime CreatedDate { get; set; }
 
-        public List<Post> Posts { get; set; } = new();
-        public List<Tag> Tags { get; set; } = new();
+        // VIRTUAL is required for lazy loading proxies
+        public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+        public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
     }
 }
