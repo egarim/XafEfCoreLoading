@@ -14,69 +14,6 @@ using System.Collections;
 using System.IO;
 using Microsoft.Extensions.Logging;
 
-// DbContext for testing with lazy loading
-public class BlogContext : DbContext
-{
-    private readonly string _connectionString;
-    private readonly bool _useFileDatabase;
-
-    public BlogContext(string connectionString, bool useFileDatabase = false)
-    {
-        _connectionString = connectionString;
-        _useFileDatabase = useFileDatabase;
-    }
-
-    public DbSet<Blog> Blogs { get; set; }
-    public DbSet<Post> Posts { get; set; }
-    public DbSet<Comment> Comments { get; set; }
-    public DbSet<Tag> Tags { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (_useFileDatabase)
-        {
-            optionsBuilder.UseSqlite(_connectionString);
-        }
-        else
-        {
-            optionsBuilder.UseInMemoryDatabase(_connectionString);
-        }
-
-        // Enable lazy loading
-        optionsBuilder.UseLazyLoadingProxies();
-
-        // Configure logging to show SQL queries
-        optionsBuilder
-            .LogTo(TestLogger.WriteSqlQuery, LogLevel.Information)
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors();
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        // Configure relationships
-        modelBuilder.Entity<Post>()
-            .HasOne(p => p.Blog)
-            .WithMany(b => b.Posts)
-            .HasForeignKey(p => p.BlogId);
-
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.Post)
-            .WithMany(p => p.Comments)
-            .HasForeignKey(c => c.PostId);
-
-        // Many-to-many relationship between Blog and Tag
-        modelBuilder.Entity<Blog>()
-            .HasMany(b => b.Tags)
-            .WithMany(t => t.Blogs);
-
-        // Seed some data using the shared helper
-        SeedDataHelper.SeedData(modelBuilder);
-    }
-}
-
 // Test Class
 [TestFixture]
 public class EfCorePrefetchingTests
@@ -183,29 +120,7 @@ public class EfCorePrefetchingTests
         TestLogger.WriteLine(">>> This is the N+1 problem!");
     }
 
-    [Test]
-    public void Test_Verify_Proxy_Creation()
-    {
-        TestLogger.WriteLine("=== Verifying Proxy Creation for Lazy Loading ===");
-
-        _context.ChangeTracker.Clear();
-
-        var blog = _context.Blogs.First();
-
-        TestLogger.WriteLine($"Blog type: {blog.GetType().FullName}");
-        TestLogger.WriteLine($"Is proxy: {blog.GetType().BaseType != typeof(object)}");
-        TestLogger.WriteLine($"Base type: {blog.GetType().BaseType?.Name}");
-
-        // Try to access Posts and see what happens
-        TestLogger.WriteLine("\nAccessing Posts property...");
-        var postCount = blog.Posts.Count;
-        TestLogger.WriteLine($"Posts count: {postCount}");
-
-        // Check if the Posts collection was actually loaded
-        var entry = _context.Entry(blog);
-        var postsEntry = entry.Collection(b => b.Posts);
-        TestLogger.WriteLine($"Posts collection is loaded: {postsEntry.IsLoaded}");
-    }
+  
         [Test]
         public void Test_N_Plus_One_vs_Include_Comparison()
         {
