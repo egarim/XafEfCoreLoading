@@ -20,6 +20,6 @@ namespace XafEfCoreLoading.Module.BusinessObjects
         // VIRTUAL is required for lazy loading proxies
         public virtual Blog Blog { get; set; } = null!;
         // VIRTUAL is required for lazy loading proxies and ICollection instead of List
-        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual ICollection<Comment> Comments { get; set; } = new ObservableCollection<Comment>();
     }
 }

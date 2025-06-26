@@ -1,6 +1,7 @@
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace XafEfCoreLoading.Module.BusinessObjects
@@ -13,6 +14,6 @@ namespace XafEfCoreLoading.Module.BusinessObjects
         public virtual string Name { get; set; } = string.Empty;
 
         // VIRTUAL is required for lazy loading proxies
-        public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
+        public virtual ICollection<Blog> Blogs { get; set; } = new ObservableCollection<Blog>();
     }
 }

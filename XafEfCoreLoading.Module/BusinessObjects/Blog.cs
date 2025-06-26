@@ -26,7 +26,7 @@ namespace XafEfCoreLoading.Module.BusinessObjects
         public virtual DateTime CreatedDate { get; set; }
 
         // VIRTUAL is required for lazy loading proxies
-        public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
-        public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
+        public virtual ObservableCollection<Post> Posts { get; set; } = new ObservableCollection<Post>();
+        public virtual ObservableCollection<Tag> Tags { get; set; } = new ObservableCollection<Tag>();
     }
 }

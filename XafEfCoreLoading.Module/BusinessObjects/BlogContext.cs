@@ -97,7 +97,7 @@ namespace XafEfCoreLoading.Module.BusinessObjects
                 .WithMany(t => t.Blogs);
 
             // Only seed data if it hasn't already been seeded
-            SeedDataHelper.SeedData(modelBuilder);
+            //SeedDataHelper.SeedData(modelBuilder);
         }
     }
 
