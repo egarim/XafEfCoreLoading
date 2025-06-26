@@ -37,8 +37,6 @@ public class XafEfCoreLoadingEFCoreDbContext : BlogContext {
     {
     }
 
-
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // Configure logging to show SQL queries
@@ -48,33 +46,17 @@ public class XafEfCoreLoadingEFCoreDbContext : BlogContext {
             .EnableDetailedErrors();
     }
 
- 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        // Call base first so that parent class can configure the model first
         base.OnModelCreating(modelBuilder);
+        
+        // Add DevExpress-specific configurations
         modelBuilder.UseDeferredDeletion(this);
         modelBuilder.UseOptimisticLock();
         modelBuilder.SetOneToManyAssociationDeleteBehavior(DeleteBehavior.SetNull, DeleteBehavior.Cascade);
         modelBuilder.HasChangeTrackingStrategy(ChangeTrackingStrategy.ChangingAndChangedNotificationsWithOriginalValues);
         modelBuilder.UsePropertyAccessMode(PropertyAccessMode.PreferFieldDuringConstruction);
 
-        // Configure relationships
-        modelBuilder.Entity<Post>()
-            .HasOne(p => p.Blog)
-            .WithMany(b => b.Posts)
-            .HasForeignKey(p => p.BlogId);
-
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.Post)
-            .WithMany(p => p.Comments)
-            .HasForeignKey(c => c.PostId);
-
-        // Many-to-many relationship between Blog and Tag
-        modelBuilder.Entity<Blog>()
-            .HasMany(b => b.Tags)
-            .WithMany(t => t.Blogs);
-
-        // Seed some data
-        //SeedData(modelBuilder);
+        // DO NOT reconfigure relationships or call SeedData again - the base class already did that
     }
 }
