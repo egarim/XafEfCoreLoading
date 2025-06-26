@@ -20,10 +20,10 @@ namespace XafEfCoreLoading.Module.BusinessObjects
     // Entity Classes
     public class Blog
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public DateTime CreatedDate { get; set; }
+        public virtual int Id { get; set; }
+        public virtual string Title { get; set; } = string.Empty;
+        public virtual  string Description { get; set; } = string.Empty;
+        public virtual DateTime CreatedDate { get; set; }
 
         // VIRTUAL is required for lazy loading proxies
         public virtual ICollection<Post> Posts { get; set; } = new List<Post>();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace XafEfCoreLoading.Module.BusinessObjects
@@ -15,6 +16,39 @@ namespace XafEfCoreLoading.Module.BusinessObjects
         {
             _connectionString = connectionString;
             _useFileDatabase = useFileDatabase;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BlogContext" /> class. The
+        /// <see cref="M:Microsoft.EntityFrameworkCore.DbContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)" />
+        /// method will be called to configure the database (and other options) to be used for this context.
+        /// </summary>
+        /// <remarks>
+        /// See <see href="https://aka.ms/efcore-docs-dbcontext">BlogContext lifetime, configuration, and initialization</see>
+        /// for more information and examples.
+        /// </remarks>
+        [RequiresUnreferencedCode("EF Core isn't fully compatible with trimming, and running the application may generate unexpected runtime failures. Some specific coding pattern are usually required to make trimming work properly, see https://aka.ms/efcore-docs-trimming for more details.")]
+        [RequiresDynamicCode("EF Core isn't fully compatible with NativeAOT, and running the application may generate unexpected runtime failures.")]
+        protected BlogContext()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BlogContext" /> class using the specified options.
+        /// The <see cref="M:Microsoft.EntityFrameworkCore.DbContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)" /> method will still be called to allow further
+        /// configuration of the options.
+        /// </summary>
+        /// <remarks>
+        /// See <see href="https://aka.ms/efcore-docs-dbcontext">BlogContext lifetime, configuration, and initialization</see> and
+        /// <see href="https://aka.ms/efcore-docs-dbcontext-options">Using DbContextOptions</see> for more information and examples.
+        /// </remarks>
+        /// <param name="options">The options for this context.</param>
+        [RequiresUnreferencedCode("EF Core isn't fully compatible with trimming, and running the application may generate unexpected runtime failures. Some specific coding pattern are usually required to make trimming work properly, see https://aka.ms/efcore-docs-trimming for more details.")]
+        [RequiresDynamicCode("EF Core isn't fully compatible with NativeAOT, and running the application may generate unexpected runtime failures.")]
+        public BlogContext(DbContextOptions options) : base(options)
+        {
+
         }
 
         public DbSet<Blog> Blogs { get; set; }
@@ -65,7 +99,7 @@ namespace XafEfCoreLoading.Module.BusinessObjects
             SeedData(modelBuilder);
         }
 
-        private void SeedData(ModelBuilder modelBuilder)
+        protected void SeedData(ModelBuilder modelBuilder)
         {
             var blogs = new[]
             {

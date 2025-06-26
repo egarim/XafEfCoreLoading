@@ -9,8 +9,8 @@ namespace XafEfCoreLoading.Module.BusinessObjects
     // Entity Classes
     public class Tag
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public virtual int Id { get; set; }
+        public virtual string Name { get; set; } = string.Empty;
 
         // VIRTUAL is required for lazy loading proxies
         public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();

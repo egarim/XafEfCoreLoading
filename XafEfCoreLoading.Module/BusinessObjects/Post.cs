@@ -11,11 +11,11 @@ namespace XafEfCoreLoading.Module.BusinessObjects
     // Entity Classes
     public class Post
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Content { get; set; } = string.Empty;
-        public DateTime PublishedDate { get; set; }
-        public int BlogId { get; set; }
+        public virtual int Id { get; set; }
+        public virtual string Title { get; set; } = string.Empty;
+        public virtual string Content { get; set; } = string.Empty;
+        public virtual DateTime PublishedDate { get; set; }
+        public virtual int BlogId { get; set; }
 
         // VIRTUAL is required for lazy loading proxies
         public virtual Blog Blog { get; set; } = null!;
