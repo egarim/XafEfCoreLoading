@@ -35,36 +35,21 @@ public class XafEfCoreLoadingDesignTimeDbContextFactory : IDesignTimeDbContextFa
 public class XafEfCoreLoadingEFCoreDbContext : DbContext {
     public XafEfCoreLoadingEFCoreDbContext(DbContextOptions<XafEfCoreLoadingEFCoreDbContext> options) : base(options) 
     {
-        //_connectionString = options.FindExtension<Microsoft.EntityFrameworkCore.Sqlite.SqliteOptionsExtension>()?.ConnectionString ?? string.Empty;
-        //_useFileDatabase = !string.IsNullOrEmpty(_connectionString) && _connectionString.StartsWith("Data Source=");
     }
-    //public DbSet<ModuleInfo> ModulesInfo { get; set; }
 
     public DbSet<Blog> Blogs { get; set; }
     public DbSet<Post> Posts { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Tag> Tags { get; set; }
 
-    private readonly string _connectionString;
-    private readonly bool _useFileDatabase;
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //if (_useFileDatabase)
-        //{
-        //    optionsBuilder.UseSqlite(_connectionString);
-        //}
-        //else
-        //{
-        //    optionsBuilder.UseSqlite(_connectionString);
-        //}
-
         // Configure logging to show SQL queries
         optionsBuilder
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
     }
-
 
     private void SeedData(ModelBuilder modelBuilder)
     {

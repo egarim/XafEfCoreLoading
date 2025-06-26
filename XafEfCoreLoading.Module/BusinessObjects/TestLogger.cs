@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Test
+namespace XafEfCoreLoading.Module.BusinessObjects
 {
+
     public static class TestLogger
     {
         public static void WriteLine(string value)
@@ -51,32 +51,3 @@ namespace Test
         }
     }
 }
-
-/*
-=== WHY LAZY LOADING IS ESSENTIAL FOR DEMONSTRATING N+1 ===
-
-Without lazy loading:
-- blog.Posts.Count returns 0 (collection is not loaded)
-- No additional queries are triggered
-- N+1 problem is NOT demonstrated
-
-With lazy loading enabled:
-- blog.Posts.Count triggers automatic loading of posts
-- Each blog access creates a separate SQL query
-- N+1 problem is clearly visible in SQL logs
-
-Required Setup for Lazy Loading:
-1. Install Microsoft.EntityFrameworkCore.Proxies NuGet package
-2. Call UseLazyLoadingProxies() in OnConfiguring
-3. Make all navigation properties VIRTUAL
-4. Use ICollection<T> instead of List<T> for collections
-
-Alternative Ways to Enable Lazy Loading:
-1. Proxies (what we use): Automatic, requires virtual properties
-2. Explicit lazy loading: Manual control using context.Entry().Reference/Collection
-3. ILazyLoader injection: More advanced, cleaner entities
-
-The lazy loading proxies create dynamic proxy classes at runtime that inherit 
-from your entity classes and override the virtual navigation properties to 
-trigger loading when accessed.
-*/

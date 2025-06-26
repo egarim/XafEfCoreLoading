@@ -1,6 +1,7 @@
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.EF;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -16,7 +17,9 @@ namespace XafEfCoreLoading.Module.BusinessObjects
         public DateTime PublishedDate { get; set; }
         public int BlogId { get; set; }
 
-        public Blog Blog { get; set; } = null!;
-        public List<Comment> Comments { get; set; } = new();
+        // VIRTUAL is required for lazy loading proxies
+        public virtual Blog Blog { get; set; } = null!;
+        // VIRTUAL is required for lazy loading proxies and ICollection instead of List
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }
 }
