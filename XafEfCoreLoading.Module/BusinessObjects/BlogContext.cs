@@ -4,10 +4,11 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace XafEfCoreLoading.Module.BusinessObjects
 {
-    // DbContext with Logging
+    // DbContext with Enhanced Logging
     public class BlogContext : DbContext
     {
         private readonly string _connectionString;
@@ -71,11 +72,40 @@ namespace XafEfCoreLoading.Module.BusinessObjects
             // ENABLE LAZY LOADING - This is crucial for N+1 problem demonstration
             optionsBuilder.UseLazyLoadingProxies();
 
-            // Configure logging to show SQL queries using our TestLogger
+            // Enhanced logging configuration for better debug visibility
             optionsBuilder
-                .LogTo(TestLogger.WriteSqlQuery, LogLevel.Information)
+                .LogTo(message => {
+                    // Write to Debug console (Visual Studio Output window)
+                    Debug.WriteLine($"[EF CORE] {message}");
+                    // Write to Console (if console is available)
+                    Console.WriteLine($"[EF CORE] {message}");
+                    // Write to TestLogger for custom handling
+                    TestLogger.WriteSqlQuery(message);
+                }, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
+
+            // Alternative: Simple debug logging without external dependencies
+            #if DEBUG
+            optionsBuilder.EnableServiceProviderCaching(false);
+            #endif
+        }
+
+        // Override SaveChanges to add debug logging
+        public override int SaveChanges()
+        {
+            Debug.WriteLine("=== EF CORE SaveChanges() START ===");
+            var result = base.SaveChanges();
+            Debug.WriteLine($"=== EF CORE SaveChanges() END - {result} entities saved ===");
+            return result;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            Debug.WriteLine("=== EF CORE SaveChangesAsync() START ===");
+            var result = await base.SaveChangesAsync(cancellationToken);
+            Debug.WriteLine($"=== EF CORE SaveChangesAsync() END - {result} entities saved ===");
+            return result;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

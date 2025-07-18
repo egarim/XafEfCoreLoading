@@ -11,6 +11,7 @@ using DevExpress.XtraEditors;
 using DevExpress.ExpressApp.Utils;
 using DevExpress.ExpressApp.Win.Utils;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace XafEfCoreLoading.Win;
 
@@ -36,6 +37,14 @@ static class Program {
             Console.WriteLine($"            2 - {DBUpdaterStatus.UpdateNotNeeded}");
             return 0;
         }
+
+        // Enable console window for debug output in Windows Forms application
+        #if DEBUG
+        AllocConsole();
+        Console.WriteLine("🐛 DEBUG MODE: Console window enabled for EF Core query logging");
+        Debug.WriteLine("🐛 DEBUG MODE: Debug output enabled for EF Core query logging");
+        #endif
+
         DevExpress.ExpressApp.FrameworkSettings.DefaultSettingsCompatibilityMode = DevExpress.ExpressApp.FrameworkSettingsCompatibilityMode.Latest;
 #if EASYTEST
         DevExpress.ExpressApp.Win.EasyTest.EasyTestRemotingRegistration.Register();
@@ -78,4 +87,9 @@ static class Program {
         }
         return 0;
     }
+
+    #if DEBUG
+    [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+    private static extern bool AllocConsole();
+    #endif
 }

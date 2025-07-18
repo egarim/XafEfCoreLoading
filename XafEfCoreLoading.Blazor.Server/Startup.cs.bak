@@ -66,7 +66,6 @@ public class Startup {
                         options.UseSqlServer(connectionString);
                         options.UseChangeTrackingProxies();
                         options.UseObjectSpaceLinkProxies();
-                        options.UseXafServiceProviderContainer(serviceProvider);
                         options.UseLazyLoadingProxies();
                     })
                 .AddNonPersistent();
@@ -76,9 +75,7 @@ public class Startup {
             .AddControllers()
             .AddOData((options, serviceProvider) => {
                 options
-                    .AddRouteComponents("api/odata", new EdmModelBuilder(serviceProvider).GetEdmModel(), Microsoft.OData.ODataVersion.V401, _routeServices => {
-                        _routeServices.ConfigureXafWebApiServices();
-                    })
+                    .AddRouteComponents("api/odata", new EdmModelBuilder(serviceProvider).GetEdmModel())
                     .EnableQueryFeatures(100);
             });
 
